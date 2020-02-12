@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validatePostId, (req, res) => {
   // do your magic!
   const { id } = req.params;
 
@@ -34,11 +34,24 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', validatePostId, (req, res) => {
   // do your magic!
+  const { id } = req.params;
+
+  Posts.remove(id)
+    .then(count => {
+      if (count > 0) {
+        res.status(200).json({ message: 'The post has been destroyed' });
+      } else {
+        res.status(404).json({ message: 'The post could not be found' });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ messagge: 'Error removing the post' });
+    });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', validatePostId, (req, res) => {
   // do your magic!
   const { id } = req.params;
   const postsData = req.body;
@@ -60,6 +73,16 @@ router.put('/:id', (req, res) => {
 
 function validatePostId(req, res, next) {
   // do your magic!
+  const { id } = req.params;
+
+  Posts.getById(id)
+    .then(id => {
+      req.post = id;
+    })
+    .catch(() => {
+      res.status(404).json({ message: 'Invalid post id' });
+    });
+  next();
 }
 
 module.exports = router;
