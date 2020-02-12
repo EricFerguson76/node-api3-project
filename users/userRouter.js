@@ -2,6 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
+router.use(express.json());
+
+const Users = require('./userDb');
+const Posts = require('../posts/postDb');
+
 router.post('/', (req, res) => {
   // do your magic!
 });
@@ -12,10 +17,30 @@ router.post('/:id/posts', (req, res) => {
 
 router.get('/', (req, res) => {
   // do your magic!
+  Users.get(req.query)
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Error retrieving the posts' });
+    });
 });
 
 router.get('/:id', (req, res) => {
   // do your magic!
+  const { id } = req.params;
+
+  Users.getById(id)
+    .then(user => {
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(400).json({ message: 'Post not found' });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Error retrieving the post' });
+    });
 });
 
 router.get('/:id/posts', (req, res) => {
