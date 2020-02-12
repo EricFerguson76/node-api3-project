@@ -62,10 +62,37 @@ router.get('/:id/posts', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   // do your magic!
+  const { id } = req.params;
+
+  Users.remove(id)
+    .then(count => {
+      if (count > 0) {
+        res.status(200).json({ message: 'The user has been destroyed' });
+      } else {
+        res.status(404).json({ message: 'The user could not be found' });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ messagge: 'Error removing the user' });
+    });
 });
 
 router.put('/:id', (req, res) => {
   // do your magic!
+  const { id } = req.params;
+  const usersData = req.body;
+
+  Users.update(id, usersData)
+    .then(updatedUser => {
+      if (updatedUser) {
+        res.status(200).json(updatedUser);
+      } else {
+        res.status(404).json({ message: 'The user could not be found' });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Error updating the user' });
+    });
 });
 
 //custom middleware
