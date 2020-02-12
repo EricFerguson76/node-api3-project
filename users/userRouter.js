@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
       res.status(200).json(users);
     })
     .catch(() => {
-      res.status(500).json({ message: 'Error retrieving the posts' });
+      res.status(500).json({ message: 'Error retrieving the users' });
     });
 });
 
@@ -35,16 +35,29 @@ router.get('/:id', (req, res) => {
       if (user) {
         res.status(200).json(user);
       } else {
+        res.status(400).json({ message: 'User not found' });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Error retrieving the user' });
+    });
+});
+
+router.get('/:id/posts', (req, res) => {
+  // do your magic!
+  const { id } = req.params;
+
+  Posts.getById(id)
+    .then(post => {
+      if (post) {
+        res.status(200).json(post);
+      } else {
         res.status(400).json({ message: 'Post not found' });
       }
     })
     .catch(() => {
       res.status(500).json({ message: 'Error retrieving the post' });
     });
-});
-
-router.get('/:id/posts', (req, res) => {
-  // do your magic!
 });
 
 router.delete('/:id', (req, res) => {
