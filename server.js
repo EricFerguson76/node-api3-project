@@ -12,8 +12,14 @@ server.get('/', (req, res) => {
 server.use('/api/users', userRoutes);
 server.use('/api/posts', postRoutes);
 
+server.use(logger);
+
 //custom middleware
 
-function logger(req, res, next) {}
-
+function logger(req, res, next) {
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} to ${req.originalUrl} `
+  );
+  next();
+}
 module.exports = server;
