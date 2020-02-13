@@ -65,12 +65,12 @@ router.get('/:id/posts', validateUserId, (req, res) => {
   // do your magic!
   const { id } = req.params;
 
-  Posts.getUserPosts(id)
+  Users.getUserPosts(id)
     .then(post => {
       if (post) {
         res.status(200).json(post);
       } else {
-        res.status(400).json({ message: 'Posts not found' });
+        res.status(404).json({ message: 'Posts not found' });
       }
     })
     .catch(() => {
