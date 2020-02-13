@@ -9,10 +9,26 @@ const Posts = require('../posts/postDb');
 
 router.post('/', (req, res) => {
   // do your magic!
+  const { name } = req.body;
+  Users.insert({ name })
+    .then(user => {
+      res.status(201).json(user);
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Error adding user' });
+    });
 });
 
 router.post('/:id/posts', (req, res) => {
   // do your magic!
+  const posts = req.body;
+  Posts.insert(posts)
+    .then(post => {
+      res.status(201).json(post);
+    })
+    .catch(() => {
+      res.status(500).json({ message: 'Error adding post' });
+    });
 });
 
 router.get('/', (req, res) => {
